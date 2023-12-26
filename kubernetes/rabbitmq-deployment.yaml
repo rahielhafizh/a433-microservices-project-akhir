@@ -1,0 +1,22 @@
+# StatefulSet RabbitMQ
+apiVersion: apps/v1 # Versi API Kubernetes yang digunakan
+kind: StatefulSet # Jenis sumber daya Kubernetes yang didefinisikan (StatefulSet)
+metadata:
+  name: rabbitmq # Nama StatefulSet RabbitMQ
+spec:
+  serviceName: "rabbitmq" # Nama layanan yang akan dihasilkan oleh StatefulSet
+  replicas: 1 # Jumlah replika pod yang diinginkan
+  selector:
+    matchLabels:
+      app: rabbitmq # Label yang digunakan untuk memilih pod yang terkait dengan StatefulSet ini
+  template:
+    metadata:
+      labels:
+        app: rabbitmq # Label yang diterapkan pada pod yang dibuat oleh StatefulSet ini
+    spec:
+      containers:
+        - name: rabbitmq # Nama container
+          image: rabbitmq:3.11-management # Nama dan versi image container (menggunakan RabbitMQ versi 3.11 dengan manajemen plugin)
+          ports:
+            - containerPort: 5672 # Port AMQP (Advanced Message Queuing Protocol) yang digunakan
+            - containerPort: 15672 # Port untuk antarmuka manajemen RabbitMQ

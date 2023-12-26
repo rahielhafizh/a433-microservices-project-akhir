@@ -1,0 +1,36 @@
+# Berkas YAML pertama, menentukan Deployment untuk order-service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service-deployment # Nama deployment
+spec:
+  replicas: 1 # Jumlah replika pod yang diinginkan
+  selector:
+    matchLabels:
+      app: order-service # Label yang digunakan untuk memilih pod yang terkait dengan deployment ini
+  template:
+    metadata:
+      labels:
+        app: order-service # Label yang diterapkan pada pod yang dibuat oleh deployment ini
+    spec:
+      containers:
+        - name: order-service # Nama container
+          image: rahielhfz/order-service # Nama dan versi image container
+          ports:
+            - containerPort: 3000 # Port yang digunakan oleh container
+          env:
+            - name: AMQP_URL
+              value: "amqp://rabbitmq-service:5672" # Nilai diambil dari berkas .env
+---
+# Berkas YAML kedua, menentukan Service untuk order-service
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service-service # Nama service
+spec:
+  selector:
+    app: order-service # Memilih pod yang akan menjadi target service
+  ports:
+    - protocol: TCP
+      port: 3000 # Port service yang akan diakses dari luar
+      targetPort: 3000 # Port pod yang akan menjadi target service
